@@ -22,9 +22,9 @@ TagManager:
   - UI
   - Player
   - Bullet
-  - 
-  - 
-  - 
+  - Wall
+  - Enemy
+  - BulletPlayer
   - 
   - 
   - 

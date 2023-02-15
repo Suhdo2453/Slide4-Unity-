@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletController : MonoBehaviour
+public class BulletControllerPlayer : MonoBehaviour
 {
     [SerializeField]
     private float speed = 20;
@@ -19,7 +19,7 @@ public class BulletController : MonoBehaviour
     {
         if ( collision.gameObject.CompareTag("Enemy"))
         {
-            transform.SendMessage("Damge", damage);
+            collision.gameObject.SendMessage("Damage", damage);
             Destroy(gameObject);
         }
         else if(collision.gameObject.CompareTag("Wall"))

@@ -9,39 +9,41 @@ public class PlayerController : MonoBehaviour
 
 
     private Animator anim;
+    private Rigidbody2D rb;
     [SerializeField]
     private float speed = 10;
     [SerializeField]
     private GameObject bullet;
-    private BulletController bulletController;
-    private Text bulletCount;
-    private Button btnFire, btnUp, btnDown, btnLeft, btnRight;
+    private BulletControllerPlayer bulletController;
+
+    [Header("Sound Effect")]
+    [SerializeField]
+    private AudioSource src;
+    [SerializeField]
+    private AudioClip audioClipMove, audioClipFire, audioClipDie;
 
     private int count = 100;
 
     private void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        bulletController = bullet.GetComponent<BulletController>();
-        bulletCount = GameObject.FindGameObjectWithTag("Score").GetComponent<Text>();
-        bulletCount.text = "Bullet: " + count;
-        btnFire = GameObject.FindGameObjectWithTag("Fire").GetComponent<Button>();
-        btnUp = GameObject.FindGameObjectWithTag("ButtonUp").GetComponent<Button>();
-        btnDown = GameObject.FindGameObjectWithTag("ButtonDown").GetComponent<Button>();
-        btnLeft = GameObject.FindGameObjectWithTag("ButtonLeft").GetComponent<Button>();
-        btnRight = GameObject.FindGameObjectWithTag("ButtonRight").GetComponent<Button>();
+        bulletController = bullet.GetComponent<BulletControllerPlayer>();
+    }
 
-        btnFire.onClick.AddListener(delegate { fire(); });
-        btnUp.onClick.AddListener(up);
-        btnDown.onClick.AddListener(delegate { down(); });
-        btnLeft.onClick.AddListener(delegate { left(); });
-        btnRight.onClick.AddListener(delegate { right(); });
+    private void PlaySound(AudioSource src, AudioClip clip)
+    {
+        if(src.clip != clip)
+            {
+                src.clip = clip;
+                src.Play();
+            }
     }
 
     private void fire()
     {
         Instantiate(bullet, transform.position, Quaternion.identity);
-        bulletCount.text = "Bullet: " + --count;
+        src.PlayOneShot(audioClipFire);
     }
 
     private void up()
@@ -49,6 +51,7 @@ public class PlayerController : MonoBehaviour
         transform.Translate(Vector3.up * speed * Time.deltaTime);
         anim.SetInteger("move", UP);
         bulletController.direction = Vector3.up;
+        PlaySound(src, audioClipMove);
     }
 
     private void down()
@@ -56,6 +59,8 @@ public class PlayerController : MonoBehaviour
         transform.Translate(Vector3.down * speed * Time.deltaTime);
         anim.SetInteger("move", DOWN);
         bulletController.direction = Vector3.down;
+        PlaySound(src, audioClipMove);
+
     }
 
     private void left()
@@ -63,6 +68,8 @@ public class PlayerController : MonoBehaviour
         transform.Translate(Vector3.left * speed * Time.deltaTime);
         anim.SetInteger("move", LEFT);
         bulletController.direction = Vector3.left;
+        PlaySound(src, audioClipMove);
+
     }
 
     private void right()
@@ -70,6 +77,7 @@ public class PlayerController : MonoBehaviour
         transform.Translate(Vector3.right * speed * Time.deltaTime);
         anim.SetInteger("move", RIGHT);
         bulletController.direction = Vector3.right;
+        PlaySound(src, audioClipMove);
     }
 
     private void Update()
@@ -100,14 +108,29 @@ public class PlayerController : MonoBehaviour
 
         }
 
-        if (count <= 0)
-        {
-            bulletCount.text = "Out of bullet";
-        }
-
         if (Input.GetKeyDown(KeyCode.Space))
         {
             fire();
+        }
+
+        if (Input.GetKeyUp(KeyCode.W))
+        {
+            src.Stop();
+            src.clip = null;
+        }else if (Input.GetKeyUp(KeyCode.A))
+        {
+            src.Stop();
+            src.clip = null;
+        }
+        else if (Input.GetKeyUp(KeyCode.S))
+        {
+            src.Stop();
+            src.clip = null;
+        }
+        else if (Input.GetKeyUp(KeyCode.D))
+        {
+            src.Stop();
+            src.clip = null;
         }
 
     }
